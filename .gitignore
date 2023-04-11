@@ -4,12 +4,17 @@
 *.dll
 *.so
 *.dylib
+*.swp
+server/entrance/entrance
+trigger/entrance/entrance
+test
 
 # Test binary, built with `go test -c`
 *.test
-
+*.log
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
+*.b*
+.idea/
 # Dependency directories (remove the comment below to include it)
 # vendor/
