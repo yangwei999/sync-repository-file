@@ -34,7 +34,8 @@ func cmdToFetchRepoFile(data []byte) (
 
 	cmd.Org = v.Org
 	cmd.Repo = v.Repo
-	cmd.Branch = v.Branch
+	cmd.Branch.Name = v.Branch
+	cmd.Branch.SHA = v.BranchSHA
 	cmd.FileNames = v.FileNames
 
 	platform = v.Platform
@@ -53,7 +54,8 @@ func cmdToFetchFileContent(data []byte) (
 
 	cmd.Org = v.Org
 	cmd.Repo = v.Repo
-	cmd.Branch = v.Branch
+	cmd.Branch.Name = v.Branch
+	cmd.Branch.SHA = v.BranchSHA
 	cmd.FilePath = v.FilePath
 
 	platform = v.Platform

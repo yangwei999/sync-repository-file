@@ -48,6 +48,7 @@ func (s repoFileService) FetchRepoBranch(
 
 	for i := range v {
 		task.Branch = v[i].Name
+		task.BranchSHA = v[i].SHA
 
 		if err := s.message.SendRepoBranchFetchedEvent(&task); err != nil {
 			return err
@@ -61,7 +62,7 @@ func (s repoFileService) FetchRepoFile(
 	p codeplatform.CodePlatform,
 	cmd *CmdToFetchRepoFile,
 ) error {
-	v, err := p.ListFiles(cmd.OrgRepo, cmd.Branch)
+	v, err := p.ListFiles(cmd.OrgRepo, cmd.Branch.Name)
 	if err != nil {
 		return err
 	}
@@ -74,17 +75,18 @@ func (s repoFileService) FetchRepoFile(
 				Repo: cmd.Repo,
 			},
 		},
-		cmd.Branch, cmd.FileNames, v,
+		cmd.Branch.Name, cmd.FileNames, v,
 	)
 	if len(files) == 0 {
 		return nil
 	}
 
 	task := domain.RepoFileFetchedEvent{
-		Platform: p.Platform(),
-		Org:      cmd.Org,
-		Repo:     cmd.Repo,
-		Branch:   cmd.Branch,
+		Platform:  p.Platform(),
+		Org:       cmd.Org,
+		Repo:      cmd.Repo,
+		Branch:    cmd.Branch.Name,
+		BranchSHA: cmd.Branch.SHA,
 	}
 
 	for _, path := range files {
@@ -102,7 +104,7 @@ func (s repoFileService) FetchFileContent(
 	p codeplatform.CodePlatform,
 	cmd *CmdToFetchFileContent,
 ) error {
-	v, err := p.GetFile(cmd.OrgRepo, cmd.Branch, cmd.FilePath)
+	v, err := p.GetFile(cmd.OrgRepo, cmd.Branch.Name, cmd.FilePath)
 	if err != nil {
 		return err
 	}

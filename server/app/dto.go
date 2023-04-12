@@ -11,13 +11,13 @@ type CmdToFetchRepoBranch struct {
 type CmdToFetchRepoFile struct {
 	domain.OrgRepo
 
-	Branch    string
+	Branch    domain.Branch
 	FileNames []string
 }
 
 type CmdToFetchFileContent struct {
 	domain.OrgRepo
 
-	Branch   string
+	Branch   domain.Branch
 	FilePath string
 }

@@ -8,6 +8,7 @@ type RepoBranchFetchedEvent struct {
 	Org       string   `json:"org"`
 	Repo      string   `json:"repo"`
 	Branch    string   `json:"branch"`
+	BranchSHA string   `json:"branch_sha"`
 	FileNames []string `json:"file_names"`
 }
 
@@ -23,11 +24,12 @@ func UnmarshalToRepoBranchFetchedEvent(msg []byte) (r RepoBranchFetchedEvent, er
 
 // RepoFileFetchedEvent
 type RepoFileFetchedEvent struct {
-	Platform string `json:"platform"`
-	Org      string `json:"org"`
-	Repo     string `json:"repo"`
-	Branch   string `json:"branch"`
-	FilePath string `json:"path"`
+	Platform  string `json:"platform"`
+	Org       string `json:"org"`
+	Repo      string `json:"repo"`
+	Branch    string `json:"branch"`
+	BranchSHA string `json:"branch_sha"`
+	FilePath  string `json:"path"`
 }
 
 func (t *RepoFileFetchedEvent) Message() ([]byte, error) {

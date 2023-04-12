@@ -17,16 +17,16 @@ type repoFileImpl struct {
 	cli *sdk.SDK
 }
 
-func (fc *repoFileImpl) SaveFile(repo domain.PlatformOrgRepo, branch string, file domain.RepoFile) error {
+func (fc *repoFileImpl) SaveFile(repo domain.PlatformOrgRepo, branch domain.Branch, file domain.RepoFile) error {
 	opts := models.FileUpdateOption{
 		Branch: models.Branch{
 			Platform: repo.Platform,
 			Org:      repo.Org,
 			Repo:     repo.Repo,
-			Branch:   branch,
+			Branch:   branch.Name,
 		},
 	}
-	//opts.BranchSHA = branch.SHA
+	opts.BranchSHA = branch.SHA
 
 	opts.Files = []models.File{
 		{
