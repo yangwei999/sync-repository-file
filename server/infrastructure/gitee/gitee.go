@@ -3,9 +3,11 @@ package gitee
 import (
 	"path"
 
+	"github.com/opensourceways/go-gitee/gitee"
 	"github.com/opensourceways/robot-gitee-lib/client"
 
 	"github.com/opensourceways/sync-repository-file/server/domain"
+	"github.com/opensourceways/sync-repository-file/utils"
 )
 
 func NewGiteePlatform(cfg *Config) *giteePlatform {
@@ -47,7 +49,15 @@ func (gp *giteePlatform) ListBranches(repo domain.OrgRepo) ([]domain.Branch, err
 func (gp *giteePlatform) ListFiles(repo domain.OrgRepo, branch string) (
 	[]domain.RepoFileInfo, error,
 ) {
-	trees, err := gp.cli.GetDirectoryTree(repo.Org, repo.Repo, branch, 1)
+	var trees gitee.Tree
+	var err error
+
+	err = utils.Retry(func() error {
+		trees, err = gp.cli.GetDirectoryTree(repo.Org, repo.Repo, branch, 1)
+
+		return err
+	})
+
 	if err != nil || len(trees.Tree) == 0 {
 		return nil, err
 	}

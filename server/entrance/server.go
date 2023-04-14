@@ -38,7 +38,7 @@ func (s *server) subscribe(cfg *Config) error {
 	return kafka.Subscribe(cfg.GroupName, h)
 }
 
-func (s *server) platorm(p string) (codeplatform.CodePlatform, error) {
+func (s *server) platform(p string) (codeplatform.CodePlatform, error) {
 	v, ok := s.platforms[p]
 	if !ok {
 		return nil, errors.New("unknown platform: " + p)
@@ -54,7 +54,7 @@ func (s *server) handleRepoFetched(data []byte, header map[string]string) error 
 		return err
 	}
 
-	p, err := s.platorm(msg.Platform)
+	p, err := s.platform(msg.Platform)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (s *server) handleRepoBranchFetched(data []byte, header map[string]string) 
 		return err
 	}
 
-	p, err := s.platorm(platform)
+	p, err := s.platform(platform)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func (s *server) handleRepoFileFetched(data []byte, header map[string]string) er
 		return err
 	}
 
-	p, err := s.platorm(platform)
+	p, err := s.platform(platform)
 	if err != nil {
 		return err
 	}
