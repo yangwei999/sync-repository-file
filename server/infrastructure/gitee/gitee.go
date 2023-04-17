@@ -1,6 +1,7 @@
 package gitee
 
 import (
+	"fmt"
 	"path"
 
 	"github.com/opensourceways/go-gitee/gitee"
@@ -31,7 +32,7 @@ func (gp *giteePlatform) Platform() string {
 func (gp *giteePlatform) ListBranches(repo domain.OrgRepo) ([]domain.Branch, error) {
 	branches, err := gp.cli.GetRepoAllBranch(repo.Org, repo.Repo)
 	if err != nil || len(branches) == 0 {
-		return nil, err
+		return nil, fmt.Errorf("%s of %s in %s", err.Error(), repo.Repo, repo.Org)
 	}
 
 	infos := make([]domain.Branch, len(branches))
