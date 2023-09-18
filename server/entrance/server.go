@@ -34,12 +34,10 @@ func (s *server) run(ctx context.Context, cfg *Config) error {
 }
 
 func (s *server) subscribe(cfg *Config) error {
-	topics := &cfg.Topics
-
 	return kafka.Subscribe(cfg.GroupName, s.handleByHeader, []string{
-		topics.RepoFetched,
-		topics.RepoBranchFetched,
-		topics.RepoFileFetched,
+		cfg.Topics.RepoFetched,
+		cfg.Topics.RepoBranchFetched,
+		cfg.Topics.RepoFileFetched,
 	})
 }
 
