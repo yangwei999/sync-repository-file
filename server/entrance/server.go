@@ -28,14 +28,26 @@ func (s *server) run(ctx context.Context, cfg *Config) error {
 
 func (s *server) subscribe(cfg *Config) error {
 	topics := &cfg.Topics
-
-	h := map[string]kafka.Handler{
-		topics.RepoFetched:       s.handleRepoFetched,
-		topics.RepoBranchFetched: s.handleRepoBranchFetched,
-		topics.RepoFileFetched:   s.handleRepoFileFetched,
+	t := []string{
+		topics.RepoFetched,
+		topics.RepoBranchFetched,
+		topics.RepoFileFetched,
 	}
 
-	return kafka.Subscribe(cfg.GroupName, h)
+	return kafka.Subscribe(cfg.GroupName, s.handleByHeader, t)
+}
+
+func (s *server) handleByHeader(data []byte, header map[string]string) error {
+	switch header["header_key"] {
+	case "handleRepoFetched":
+		return s.handleRepoFetched(data, header)
+	case "handleRepoBranchFetched":
+		return s.handleRepoBranchFetched(data, header)
+	case "handleRepoFileFetched":
+		return s.handleRepoFileFetched(data, header)
+	default:
+		return errors.New("unknown header value")
+	}
 }
 
 func (s *server) platform(p string) (codeplatform.CodePlatform, error) {

@@ -17,18 +17,26 @@ type repoFileMessage struct {
 }
 
 func (p *repoFileMessage) SendRepoBranchFetchedEvent(e message.Message) error {
-	return send(p.topics.RepoBranchFetched, e)
+	header := map[string]string{
+		"header_key": "handleRepoBranchFetched",
+	}
+
+	return send(p.topics.RepoBranchFetched, header, e)
 }
 
 func (p *repoFileMessage) SendRepoFileFetchedEvent(e message.Message) error {
-	return send(p.topics.RepoFileFetched, e)
+	header := map[string]string{
+		"header_key": "handleRepoFileFetched",
+	}
+
+	return send(p.topics.RepoFileFetched, header, e)
 }
 
-func send(topic string, v message.Message) error {
+func send(topic string, header map[string]string, v message.Message) error {
 	body, err := v.Message()
 	if err != nil {
 		return err
 	}
 
-	return kafka.Publish(topic, nil, body)
+	return kafka.Publish(topic, header, body)
 }
