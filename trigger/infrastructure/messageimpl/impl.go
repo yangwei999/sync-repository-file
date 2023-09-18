@@ -6,6 +6,11 @@ import (
 	"github.com/opensourceways/sync-repository-file/trigger/domain/message"
 )
 
+const (
+	HeaderKey            = "header_key"
+	HeaderKeyRepoFetched = "handleRepoFetched"
+)
+
 func NewRepoMessage(cfg *Config) *repoMessage {
 	return &repoMessage{
 		topics: cfg.Topics,
@@ -18,7 +23,7 @@ type repoMessage struct {
 
 func (p *repoMessage) SendRepoFetchedEvent(e message.Message) error {
 	header := map[string]string{
-		"header_key": "handleRepoFetched",
+		HeaderKey: HeaderKeyRepoFetched,
 	}
 
 	return send(p.topics.RepoFetched, header, e)

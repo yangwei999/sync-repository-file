@@ -6,6 +6,12 @@ import (
 	"github.com/opensourceways/sync-repository-file/server/domain/message"
 )
 
+const (
+	HeaderKey                  = "header_key"
+	HeaderKeyRepoBranchFetched = "handleRepoBranchFetched"
+	HeaderKeyRepoFileFetched   = "handleRepoFileFetched"
+)
+
 func NewRepoFileMessage(cfg *Config) *repoFileMessage {
 	return &repoFileMessage{
 		topics: cfg.Topics,
@@ -18,7 +24,7 @@ type repoFileMessage struct {
 
 func (p *repoFileMessage) SendRepoBranchFetchedEvent(e message.Message) error {
 	header := map[string]string{
-		"header_key": "handleRepoBranchFetched",
+		HeaderKey: HeaderKeyRepoBranchFetched,
 	}
 
 	return send(p.topics.RepoBranchFetched, header, e)
@@ -26,7 +32,7 @@ func (p *repoFileMessage) SendRepoBranchFetchedEvent(e message.Message) error {
 
 func (p *repoFileMessage) SendRepoFileFetchedEvent(e message.Message) error {
 	header := map[string]string{
-		"header_key": "handleRepoFileFetched",
+		HeaderKey: HeaderKeyRepoFileFetched,
 	}
 
 	return send(p.topics.RepoFileFetched, header, e)

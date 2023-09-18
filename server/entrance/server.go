@@ -11,6 +11,13 @@ import (
 	"github.com/opensourceways/sync-repository-file/server/domain/codeplatform"
 )
 
+const (
+	HeaderKey                  = "header_key"
+	HeaderKeyRepoFetched       = "handleRepoFetched"
+	HeaderKeyRepoBranchFetched = "handleRepoBranchFetched"
+	HeaderKeyRepoFileFetched   = "handleRepoFileFetched"
+)
+
 type server struct {
 	service   app.RepoFileService
 	platforms map[string]codeplatform.CodePlatform
@@ -28,22 +35,21 @@ func (s *server) run(ctx context.Context, cfg *Config) error {
 
 func (s *server) subscribe(cfg *Config) error {
 	topics := &cfg.Topics
-	t := []string{
+
+	return kafka.Subscribe(cfg.GroupName, s.handleByHeader, []string{
 		topics.RepoFetched,
 		topics.RepoBranchFetched,
 		topics.RepoFileFetched,
-	}
-
-	return kafka.Subscribe(cfg.GroupName, s.handleByHeader, t)
+	})
 }
 
 func (s *server) handleByHeader(data []byte, header map[string]string) error {
-	switch header["header_key"] {
-	case "handleRepoFetched":
+	switch header[HeaderKey] {
+	case HeaderKeyRepoFetched:
 		return s.handleRepoFetched(data, header)
-	case "handleRepoBranchFetched":
+	case HeaderKeyRepoBranchFetched:
 		return s.handleRepoBranchFetched(data, header)
-	case "handleRepoFileFetched":
+	case HeaderKeyRepoFileFetched:
 		return s.handleRepoFileFetched(data, header)
 	default:
 		return errors.New("unknown header value")
