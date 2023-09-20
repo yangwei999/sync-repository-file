@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"github.com/opensourceways/sync-repository-file/server/domain"
 	"github.com/opensourceways/sync-repository-file/server/domain/codeplatform"
 	"github.com/opensourceways/sync-repository-file/server/domain/message"
@@ -62,23 +63,27 @@ func (s repoFileService) FetchRepoFile(
 	p codeplatform.CodePlatform,
 	cmd *CmdToFetchRepoFile,
 ) error {
-	v, err := p.ListFiles(cmd.OrgRepo, cmd.Branch.Name)
-	if err != nil {
-		return err
-	}
+	/*	v, err := p.ListFiles(cmd.OrgRepo, cmd.Branch.Name)
+		if err != nil {
+			return err
+		}
 
-	files := s.repoFileFilter.do(
-		domain.PlatformOrgRepo{
-			Platform: p.Platform(),
-			OrgRepo: domain.OrgRepo{
-				Org:  cmd.Org,
-				Repo: cmd.Repo,
-			},
-		},
-		cmd.Branch.Name, cmd.FileNames, v,
-	)
-	if len(files) == 0 {
-		return nil
+			files := s.repoFileFilter.do(
+				domain.PlatformOrgRepo{
+					Platform: p.Platform(),
+					OrgRepo: domain.OrgRepo{
+						Org:  cmd.Org,
+						Repo: cmd.Repo,
+					},
+				},
+				cmd.Branch.Name, cmd.FileNames, v,
+			)
+			if len(files) == 0 {
+				return nil
+			}*/
+
+	files := []string{
+		"https://gitee.com/mindspore/mindspore/blob/master/OWNERS",
 	}
 
 	task := domain.RepoFileFetchedEvent{
@@ -108,13 +113,17 @@ func (s repoFileService) FetchFileContent(
 	if err != nil {
 		return err
 	}
-
-	return s.repo.SaveFile(
-		domain.PlatformOrgRepo{
-			Platform: p.Platform(),
-			OrgRepo:  cmd.OrgRepo,
-		},
-		cmd.Branch,
-		v,
-	)
+	fmt.Printf("i have save %s", v.Name)
+	return err
+	/*	if err != nil {
+			return err
+		}
+		return s.repo.SaveFile(
+			domain.PlatformOrgRepo{
+				Platform: p.Platform(),
+				OrgRepo:  cmd.OrgRepo,
+			},
+			cmd.Branch,
+			v,
+		)*/
 }
