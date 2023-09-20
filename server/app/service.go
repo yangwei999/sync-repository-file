@@ -105,10 +105,10 @@ func (s repoFileService) FetchFileContent(
 	cmd *CmdToFetchFileContent,
 ) error {
 	v, err := p.GetFile(cmd.OrgRepo, cmd.Branch.Name, cmd.FilePath)
-
 	if err != nil {
 		return err
 	}
+
 	return s.repo.SaveFile(
 		domain.PlatformOrgRepo{
 			Platform: p.Platform(),
