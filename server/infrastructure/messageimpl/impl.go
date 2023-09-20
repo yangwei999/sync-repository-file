@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	HeaderKey                    = "header_key"
+	HeaderKey                    = "headerKey"
 	HeaderValueRepoFetched       = "handleRepoFetched"
 	HeaderValueRepoBranchFetched = "handleRepoBranchFetched"
 	HeaderValueRepoFileFetched   = "handleRepoFileFetched"
