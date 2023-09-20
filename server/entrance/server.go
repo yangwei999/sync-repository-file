@@ -4,18 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/opensourceways/sync-repository-file/server/infrastructure/messageimpl"
 
 	kafka "github.com/opensourceways/kafka-lib/agent"
 
 	"github.com/opensourceways/sync-repository-file/server/app"
 	"github.com/opensourceways/sync-repository-file/server/domain/codeplatform"
-)
-
-const (
-	HeaderKey                  = "header_key"
-	HeaderKeyRepoFetched       = "handleRepoFetched"
-	HeaderKeyRepoBranchFetched = "handleRepoBranchFetched"
-	HeaderKeyRepoFileFetched   = "handleRepoFileFetched"
 )
 
 type server struct {
@@ -42,12 +36,12 @@ func (s *server) subscribe(cfg *Config) error {
 }
 
 func (s *server) handleByHeader(data []byte, header map[string]string) error {
-	switch header[HeaderKey] {
-	case HeaderKeyRepoFetched:
+	switch header[messageimpl.HeaderKey] {
+	case messageimpl.HeaderValueRepoFetched:
 		return s.handleRepoFetched(data, header)
-	case HeaderKeyRepoBranchFetched:
+	case messageimpl.HeaderValueRepoBranchFetched:
 		return s.handleRepoBranchFetched(data, header)
-	case HeaderKeyRepoFileFetched:
+	case messageimpl.HeaderValueRepoFileFetched:
 		return s.handleRepoFileFetched(data, header)
 	default:
 		return errors.New("unknown header value")

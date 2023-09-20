@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	HeaderKey            = "header_key"
-	HeaderKeyRepoFetched = "handleRepoFetched"
+	HeaderKey              = "header_key"
+	HeaderValueRepoFetched = "handleRepoFetched"
 )
 
 func NewRepoMessage(cfg *Config) *repoMessage {
@@ -23,7 +23,7 @@ type repoMessage struct {
 
 func (p *repoMessage) SendRepoFetchedEvent(e message.Message) error {
 	header := map[string]string{
-		HeaderKey: HeaderKeyRepoFetched,
+		HeaderKey: HeaderValueRepoFetched,
 	}
 
 	return send(p.topics.RepoFetched, header, e)

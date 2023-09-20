@@ -7,9 +7,10 @@ import (
 )
 
 const (
-	HeaderKey                  = "header_key"
-	HeaderKeyRepoBranchFetched = "handleRepoBranchFetched"
-	HeaderKeyRepoFileFetched   = "handleRepoFileFetched"
+	HeaderKey                    = "header_key"
+	HeaderValueRepoFetched       = "handleRepoFetched"
+	HeaderValueRepoBranchFetched = "handleRepoBranchFetched"
+	HeaderValueRepoFileFetched   = "handleRepoFileFetched"
 )
 
 func NewRepoFileMessage(cfg *Config) *repoFileMessage {
@@ -24,7 +25,7 @@ type repoFileMessage struct {
 
 func (p *repoFileMessage) SendRepoBranchFetchedEvent(e message.Message) error {
 	header := map[string]string{
-		HeaderKey: HeaderKeyRepoBranchFetched,
+		HeaderKey: HeaderValueRepoBranchFetched,
 	}
 
 	return send(p.topics.RepoBranchFetched, header, e)
@@ -32,7 +33,7 @@ func (p *repoFileMessage) SendRepoBranchFetchedEvent(e message.Message) error {
 
 func (p *repoFileMessage) SendRepoFileFetchedEvent(e message.Message) error {
 	header := map[string]string{
-		HeaderKey: HeaderKeyRepoFileFetched,
+		HeaderKey: HeaderValueRepoFileFetched,
 	}
 
 	return send(p.topics.RepoFileFetched, header, e)
