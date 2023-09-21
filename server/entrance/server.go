@@ -26,25 +26,25 @@ func (s *server) run(ctx context.Context, cfg *Config) error {
 }
 
 func (s *server) subscribe(cfg *Config) error {
-	err1 := kafka.Subscribe(cfg.GroupName, s.handleRepoFetched, []string{
+	err := kafka.Subscribe(cfg.GroupName, s.handleRepoFetched, []string{
 		cfg.Topics.RepoFetched,
 	})
-	if err1 != nil {
-		return err1
+	if err != nil {
+		return err
 	}
 
-	err2 := kafka.Subscribe(cfg.GroupName, s.handleRepoBranchFetched, []string{
+	err = kafka.Subscribe(cfg.GroupName, s.handleRepoBranchFetched, []string{
 		cfg.Topics.RepoBranchFetched,
 	})
-	if err2 != nil {
-		return err2
+	if err != nil {
+		return err
 	}
 
-	err3 := kafka.Subscribe(cfg.GroupName, s.handleRepoFileFetched, []string{
+	err = kafka.Subscribe(cfg.GroupName, s.handleRepoFileFetched, []string{
 		cfg.Topics.RepoFileFetched,
 	})
-	if err3 != nil {
-		return err3
+	if err != nil {
+		return err
 	}
 
 	return nil
