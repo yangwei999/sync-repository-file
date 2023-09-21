@@ -6,13 +6,6 @@ import (
 	"github.com/opensourceways/sync-repository-file/server/domain/message"
 )
 
-const (
-	HeaderKey                    = "headerKey"
-	HeaderValueRepoFetched       = "handleRepoFetched"
-	HeaderValueRepoBranchFetched = "handleRepoBranchFetched"
-	HeaderValueRepoFileFetched   = "handleRepoFileFetched"
-)
-
 func NewRepoFileMessage(cfg *Config) *repoFileMessage {
 	return &repoFileMessage{
 		topics: cfg.Topics,
@@ -24,26 +17,18 @@ type repoFileMessage struct {
 }
 
 func (p *repoFileMessage) SendRepoBranchFetchedEvent(e message.Message) error {
-	header := map[string]string{
-		HeaderKey: HeaderValueRepoBranchFetched,
-	}
-
-	return send(p.topics.RepoBranchFetched, header, e)
+	return send(p.topics.RepoBranchFetched, e)
 }
 
 func (p *repoFileMessage) SendRepoFileFetchedEvent(e message.Message) error {
-	header := map[string]string{
-		HeaderKey: HeaderValueRepoFileFetched,
-	}
-
-	return send(p.topics.RepoFileFetched, header, e)
+	return send(p.topics.RepoFileFetched, e)
 }
 
-func send(topic string, header map[string]string, v message.Message) error {
+func send(topic string, v message.Message) error {
 	body, err := v.Message()
 	if err != nil {
 		return err
 	}
 
-	return kafka.Publish(topic, header, body)
+	return kafka.Publish(topic, nil, body)
 }

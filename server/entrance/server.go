@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/opensourceways/sync-repository-file/server/infrastructure/messageimpl"
-
 	kafka "github.com/opensourceways/kafka-lib/agent"
 
 	"github.com/opensourceways/sync-repository-file/server/app"
@@ -28,24 +26,28 @@ func (s *server) run(ctx context.Context, cfg *Config) error {
 }
 
 func (s *server) subscribe(cfg *Config) error {
-	return kafka.Subscribe(cfg.GroupName, s.handleByHeader, []string{
+	err1 := kafka.Subscribe(cfg.GroupName, s.handleRepoFetched, []string{
 		cfg.Topics.RepoFetched,
+	})
+	if err1 != nil {
+		return err1
+	}
+
+	err2 := kafka.Subscribe(cfg.GroupName, s.handleRepoBranchFetched, []string{
 		cfg.Topics.RepoBranchFetched,
+	})
+	if err2 != nil {
+		return err2
+	}
+
+	err3 := kafka.Subscribe(cfg.GroupName, s.handleRepoFileFetched, []string{
 		cfg.Topics.RepoFileFetched,
 	})
-}
-
-func (s *server) handleByHeader(data []byte, header map[string]string) error {
-	switch header[messageimpl.HeaderKey] {
-	case messageimpl.HeaderValueRepoFetched:
-		return s.handleRepoFetched(data, header)
-	case messageimpl.HeaderValueRepoBranchFetched:
-		return s.handleRepoBranchFetched(data, header)
-	case messageimpl.HeaderValueRepoFileFetched:
-		return s.handleRepoFileFetched(data, header)
-	default:
-		return errors.New("unknown header value")
+	if err3 != nil {
+		return err3
 	}
+
+	return nil
 }
 
 func (s *server) platform(p string) (codeplatform.CodePlatform, error) {
