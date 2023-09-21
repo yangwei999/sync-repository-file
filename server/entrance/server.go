@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-
 	kafka "github.com/opensourceways/kafka-lib/agent"
 
 	"github.com/opensourceways/sync-repository-file/server/app"
@@ -27,15 +26,28 @@ func (s *server) run(ctx context.Context, cfg *Config) error {
 }
 
 func (s *server) subscribe(cfg *Config) error {
-	topics := &cfg.Topics
-
-	h := map[string]kafka.Handler{
-		topics.RepoFetched:       s.handleRepoFetched,
-		topics.RepoBranchFetched: s.handleRepoBranchFetched,
-		topics.RepoFileFetched:   s.handleRepoFileFetched,
+	err := kafka.Subscribe(cfg.GroupName, s.handleRepoFetched, []string{
+		cfg.Topics.RepoFetched,
+	})
+	if err != nil {
+		return err
 	}
 
-	return kafka.Subscribe(cfg.GroupName, h)
+	err = kafka.Subscribe(cfg.GroupName, s.handleRepoBranchFetched, []string{
+		cfg.Topics.RepoBranchFetched,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = kafka.Subscribe(cfg.GroupName, s.handleRepoFileFetched, []string{
+		cfg.Topics.RepoFileFetched,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *server) platform(p string) (codeplatform.CodePlatform, error) {

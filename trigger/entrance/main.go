@@ -63,7 +63,7 @@ func main() {
 	}
 
 	// mq
-	if err = kafka.Init(&cfg.Kafka, log); err != nil {
+	if err = kafka.Init(&cfg.Kafka, log, nil, ""); err != nil {
 		logrus.Errorf("initialize mq failed, err:%v", err)
 
 		return
