@@ -1,6 +1,8 @@
 package app
 
 import (
+	"github.com/sirupsen/logrus"
+
 	"github.com/opensourceways/sync-repository-file/server/domain"
 	"github.com/opensourceways/sync-repository-file/server/domain/codeplatform"
 	"github.com/opensourceways/sync-repository-file/server/domain/message"
@@ -50,6 +52,8 @@ func (s repoFileService) FetchRepoBranch(
 		task.Branch = v[i].Name
 		task.BranchSHA = v[i].SHA
 
+		logrus.Infoln("get branches successful", cmd.Org, cmd.Repo, v[i].Name)
+
 		if err := s.message.SendRepoBranchFetchedEvent(&task); err != nil {
 			return err
 		}
@@ -89,6 +93,8 @@ func (s repoFileService) FetchRepoFile(
 		BranchSHA: cmd.Branch.SHA,
 	}
 
+	logrus.Infoln("get files successful", cmd.Org, cmd.Repo, cmd.Branch.Name, files)
+
 	for _, path := range files {
 		task.FilePath = path
 
@@ -108,6 +114,8 @@ func (s repoFileService) FetchFileContent(
 	if err != nil {
 		return err
 	}
+
+	logrus.Infoln("save file", cmd.Org, cmd.Repo, cmd.Branch.Name, cmd.FilePath)
 
 	return s.repo.SaveFile(
 		domain.PlatformOrgRepo{
